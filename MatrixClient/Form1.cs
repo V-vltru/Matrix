@@ -284,22 +284,6 @@ namespace MatrixClient
             IsOperationApproved = false;
         }
 
-        private void PrintErrorMessage(string message)
-        {
-            labelState.ForeColor = Color.Red;
-            labelState.Text = DefaultLabelState + message;
-
-            IsOperationApproved = false;
-        }
-
-        private void PrintApprovedMessage(string message)
-        {
-            labelState.ForeColor = Color.Green;
-            labelState.Text = this.DefaultLabelState + message;
-
-            IsOperationApproved = true;
-        }
-
         private void SetColumnsAndRowsForDatagridView(DataGridView dataGridView, int rows, int columns)
         {
             dataGridView.Rows.Clear();

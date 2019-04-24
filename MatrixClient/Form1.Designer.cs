@@ -49,6 +49,8 @@
             this.dataGridViewResult = new System.Windows.Forms.DataGridView();
             this.buttonCalculate = new System.Windows.Forms.Button();
             this.labelState = new System.Windows.Forms.Label();
+            this.checkBoxParallel = new System.Windows.Forms.CheckBox();
+            this.labelTime = new System.Windows.Forms.Label();
             this.groupBoxMatrixParameters.SuspendLayout();
             this.groupBoxMatrixes.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewB)).BeginInit();
@@ -245,7 +247,7 @@
             // 
             // buttonCalculate
             // 
-            this.buttonCalculate.Location = new System.Drawing.Point(15, 476);
+            this.buttonCalculate.Location = new System.Drawing.Point(12, 499);
             this.buttonCalculate.Name = "buttonCalculate";
             this.buttonCalculate.Size = new System.Drawing.Size(504, 68);
             this.buttonCalculate.TabIndex = 11;
@@ -262,11 +264,32 @@
             this.labelState.TabIndex = 12;
             this.labelState.Text = "Статус: ";
             // 
+            // checkBoxParallel
+            // 
+            this.checkBoxParallel.AutoSize = true;
+            this.checkBoxParallel.Location = new System.Drawing.Point(12, 476);
+            this.checkBoxParallel.Name = "checkBoxParallel";
+            this.checkBoxParallel.Size = new System.Drawing.Size(204, 17);
+            this.checkBoxParallel.TabIndex = 13;
+            this.checkBoxParallel.Text = "Выполнить операцию параллельно";
+            this.checkBoxParallel.UseVisualStyleBackColor = true;
+            // 
+            // labelTime
+            // 
+            this.labelTime.AutoSize = true;
+            this.labelTime.Location = new System.Drawing.Point(12, 722);
+            this.labelTime.Name = "labelTime";
+            this.labelTime.Size = new System.Drawing.Size(46, 13);
+            this.labelTime.TabIndex = 14;
+            this.labelTime.Text = "Время: ";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1196, 782);
+            this.Controls.Add(this.labelTime);
+            this.Controls.Add(this.checkBoxParallel);
             this.Controls.Add(this.labelState);
             this.Controls.Add(this.buttonCalculate);
             this.Controls.Add(this.groupBox1);
@@ -314,6 +337,8 @@
         private System.Windows.Forms.DataGridView dataGridViewResult;
         private System.Windows.Forms.Button buttonCalculate;
         private System.Windows.Forms.Label labelState;
+        private System.Windows.Forms.CheckBox checkBoxParallel;
+        private System.Windows.Forms.Label labelTime;
     }
 }
 
