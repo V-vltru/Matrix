@@ -79,5 +79,11 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\MatrixLib\MatrixLib.csproj">
+      <Project>{12de7549-f146-4aaf-85cd-e51b9ab315fc}</Project>
+      <Name>MatrixLib</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

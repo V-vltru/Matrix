@@ -32,6 +32,9 @@
         public MatrixT(T[,] _elements)
         {
             this.elements = _elements;
+
+            this.rows = this.elements.GetLength(0);
+            this.cols = this.elements.GetLength(1);
         }
 
         // Перегружаем бинарный оператор +

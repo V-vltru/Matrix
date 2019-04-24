@@ -201,6 +201,7 @@
             this.buttonFillRandom.TabIndex = 8;
             this.buttonFillRandom.Text = "Заполнить случайно";
             this.buttonFillRandom.UseVisualStyleBackColor = true;
+            this.buttonFillRandom.Click += new System.EventHandler(this.buttonFillRandom_Click);
             // 
             // groupBoxOperations
             // 
@@ -250,6 +251,7 @@
             this.buttonCalculate.TabIndex = 11;
             this.buttonCalculate.Text = "Рассчитать";
             this.buttonCalculate.UseVisualStyleBackColor = true;
+            this.buttonCalculate.Click += new System.EventHandler(this.buttonCalculate_Click);
             // 
             // labelState
             // 
