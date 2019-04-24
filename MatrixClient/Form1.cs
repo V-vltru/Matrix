@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -47,6 +48,7 @@ namespace MatrixClient
 
             labelOperation.Text = string.Empty;
 
+            checkBoxParallel.Enabled = false;
             dataGridViewA.Enabled = false;
             dataGridViewB.Enabled = false;
             dataGridViewResult.Enabled = false;
@@ -74,6 +76,7 @@ namespace MatrixClient
                 dataGridViewB.Enabled = true;
                 dataGridViewResult.Enabled = true;
 
+                checkBoxParallel.Enabled = true;
                 buttonFillRandom.Enabled = true;
                 buttonCalculate.Enabled = true;
 
@@ -106,22 +109,36 @@ namespace MatrixClient
                 double[,] matrixA = this.GetArrayFromGrid(dataGridViewA);
                 double[,] matrixB = this.GetArrayFromGrid(dataGridViewB);
 
+                if (checkBoxParallel.Checked)
+                {
+                    MatrixT<double>.Paral = true;
+                }
+
                 MatrixT<double> A = new MatrixT<double>(matrixA);
                 MatrixT<double> B = new MatrixT<double>(matrixB);
 
                 MatrixT<double> Result = null;
 
                 Operations operation = (Operations)comboBoxOperation.SelectedIndex;
+
+                Stopwatch stopwatch = new Stopwatch();
+
                 switch (operation)
                 {
                     case Operations.Sum:
                         {
+                            stopwatch.Start();
                             Result = A + B;
+                            stopwatch.Stop();
+
                             break;
                         }
                     case Operations.Multiply:
                         {
+                            stopwatch.Start();
                             Result = A * B;
+                            stopwatch.Stop();
+
                             break;
                         }
                     default:
@@ -129,6 +146,10 @@ namespace MatrixClient
                             throw new Exception("Операция не установлена");
                         }
                 }
+
+                double calcTime = stopwatch.ElapsedMilliseconds / 1000.0;
+
+                labelTime.Text = "Время: " + calcTime.ToString();
 
                 this.SetResultGrid(Result);
             }
