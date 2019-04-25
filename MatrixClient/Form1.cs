@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -40,6 +41,8 @@ namespace MatrixClient
 
         private bool IsOperationApproved = false;
 
+        private MatrixT<double> Result { get; set; }
+
         public Form1()
         {
             InitializeComponent();
@@ -55,6 +58,7 @@ namespace MatrixClient
 
             buttonFillRandom.Enabled = false;
             buttonCalculate.Enabled = false;
+            buttonSaveCSV.Enabled = false;
 
             labelOperation.Font = new Font("Arial", 36, FontStyle.Bold);
         }
@@ -128,7 +132,7 @@ namespace MatrixClient
                     case Operations.Sum:
                         {
                             stopwatch.Start();
-                            Result = A + B;
+                            this.Result = A + B;
                             stopwatch.Stop();
 
                             break;
@@ -136,7 +140,7 @@ namespace MatrixClient
                     case Operations.Multiply:
                         {
                             stopwatch.Start();
-                            Result = A * B;
+                            this.Result = A * B;
                             stopwatch.Stop();
 
                             break;
@@ -151,11 +155,45 @@ namespace MatrixClient
 
                 labelTime.Text = "Время: " + calcTime.ToString();
 
-                this.SetResultGrid(Result);
+                this.SetResultGrid(this.Result);
+
+                buttonSaveCSV.Enabled = true;
             }
             else
             {
                 MessageBox.Show("Значения матрицы установлены не верно!");
+            }
+        }
+
+        private void buttonSaveCSV_Click(object sender, EventArgs e)
+        {
+            string delimiter = ",";
+
+            StringBuilder stringBuilder = new StringBuilder();
+            double[][] output = ToJagged<double>(this.Result.Elements);
+
+            int length = output.GetLength(0);
+            for (int index = 0; index < length; index++)
+            {
+                stringBuilder.AppendLine(string.Join(delimiter, output[index]));
+            }
+
+            Stream stream;
+            saveFileDialogCSV.Filter = "csv files (*.csv)|*.csv";
+            saveFileDialogCSV.FilterIndex = 0;
+            saveFileDialogCSV.RestoreDirectory = true;
+
+            if (saveFileDialogCSV.ShowDialog() == DialogResult.OK)
+            {
+                if((stream = saveFileDialogCSV.OpenFile()) != null)
+                {
+                    using (StreamWriter writer = new StreamWriter(stream))
+                    {
+                        writer.Write(stringBuilder.ToString());
+                    }
+
+                    stream.Close();
+                }
             }
         }
 
@@ -384,9 +422,9 @@ namespace MatrixClient
             dataGridViewResult.Enabled = true;
             dataGridViewResult.AllowUserToAddRows = false;
 
-            dataGridViewResult.ColumnCount = result.cols;
+            dataGridViewResult.ColumnCount = result.Cols;
 
-            for (int i = 0; i < result.rows; i++)
+            for (int i = 0; i < result.Rows; i++)
             {
                 string[] row = new string[dataGridViewResult.ColumnCount];
                 for (int j = 0; j < dataGridViewResult.ColumnCount; j++)
@@ -398,6 +436,24 @@ namespace MatrixClient
             }
 
             dataGridViewResult.ReadOnly = true;
+        }
+
+        private static T[][] ToJagged<T>(T[,] mArray)
+        {
+            var rows = mArray.GetLength(0);
+            var cols = mArray.GetLength(1);
+            var jArray = new T[rows][];
+
+            for (int i = 0; i < rows; i++)
+            {
+                jArray[i] = new T[cols];
+                for (int j = 0; j < cols; j++)
+                {
+                    jArray[i][j] = mArray[i, j];
+                }
+            }
+
+            return jArray;
         }
     }
 }

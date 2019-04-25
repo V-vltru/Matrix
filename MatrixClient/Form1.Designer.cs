@@ -51,6 +51,8 @@
             this.labelState = new System.Windows.Forms.Label();
             this.checkBoxParallel = new System.Windows.Forms.CheckBox();
             this.labelTime = new System.Windows.Forms.Label();
+            this.buttonSaveCSV = new System.Windows.Forms.Button();
+            this.saveFileDialogCSV = new System.Windows.Forms.SaveFileDialog();
             this.groupBoxMatrixParameters.SuspendLayout();
             this.groupBoxMatrixes.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewB)).BeginInit();
@@ -283,11 +285,22 @@
             this.labelTime.TabIndex = 14;
             this.labelTime.Text = "Время: ";
             // 
+            // buttonSaveCSV
+            // 
+            this.buttonSaveCSV.Location = new System.Drawing.Point(12, 583);
+            this.buttonSaveCSV.Name = "buttonSaveCSV";
+            this.buttonSaveCSV.Size = new System.Drawing.Size(204, 23);
+            this.buttonSaveCSV.TabIndex = 15;
+            this.buttonSaveCSV.Text = "Сохранить в .csv";
+            this.buttonSaveCSV.UseVisualStyleBackColor = true;
+            this.buttonSaveCSV.Click += new System.EventHandler(this.buttonSaveCSV_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1196, 782);
+            this.Controls.Add(this.buttonSaveCSV);
             this.Controls.Add(this.labelTime);
             this.Controls.Add(this.checkBoxParallel);
             this.Controls.Add(this.labelState);
@@ -339,6 +352,8 @@
         private System.Windows.Forms.Label labelState;
         private System.Windows.Forms.CheckBox checkBoxParallel;
         private System.Windows.Forms.Label labelTime;
+        private System.Windows.Forms.Button buttonSaveCSV;
+        private System.Windows.Forms.SaveFileDialog saveFileDialogCSV;
     }
 }
 
