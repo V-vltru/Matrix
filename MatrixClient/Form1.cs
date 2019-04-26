@@ -84,8 +84,8 @@ namespace MatrixClient
                 buttonFillRandom.Enabled = true;
                 buttonCalculate.Enabled = true;
 
-                this.SetColumnsAndRowsForDatagridView(dataGridViewA, this.MatrixARowsCount, this.MatrixAColumnsCount);
-                this.SetColumnsAndRowsForDatagridView(dataGridViewB, this.MatrixBRowsCount, this.MatrixBColumnsCount);
+                MatrixClientHelper.SetColumnsAndRowsForDatagridView(dataGridViewA, this.MatrixARowsCount, this.MatrixAColumnsCount, (i, j) => { return 0; });
+                MatrixClientHelper.SetColumnsAndRowsForDatagridView(dataGridViewB, this.MatrixBRowsCount, this.MatrixBColumnsCount, (i, j) => { return 0; });
             }
             else
             {
@@ -95,9 +95,7 @@ namespace MatrixClient
 
         private void buttonFillRandom_Click(object sender, EventArgs e)
         {
-            Random random = new Random();
-
-            this.SetRandomValuesForGrid(dataGridViewA, dataGridViewB);
+            MatrixClientHelper.SetRandomValuesForGrid(dataGridViewA, dataGridViewB);
         }
 
         private void buttonCalculate_Click(object sender, EventArgs e)
@@ -108,10 +106,10 @@ namespace MatrixClient
                 return;
             }
 
-            if (this.VerifyMatrixParameters(dataGridViewA, dataGridViewB))
+            if (MatrixClientHelper.VerifyMatrixParameters(dataGridViewA, dataGridViewB))
             {
-                double[,] matrixA = this.GetArrayFromGrid(dataGridViewA);
-                double[,] matrixB = this.GetArrayFromGrid(dataGridViewB);
+                double[,] matrixA = MatrixClientHelper.GetArrayFromGrid(dataGridViewA);
+                double[,] matrixB = MatrixClientHelper.GetArrayFromGrid(dataGridViewB);
 
                 if (checkBoxParallel.Checked)
                 {
@@ -120,8 +118,6 @@ namespace MatrixClient
 
                 MatrixT<double> A = new MatrixT<double>(matrixA);
                 MatrixT<double> B = new MatrixT<double>(matrixB);
-
-                MatrixT<double> Result = null;
 
                 Operations operation = (Operations)comboBoxOperation.SelectedIndex;
 
@@ -170,7 +166,7 @@ namespace MatrixClient
             string delimiter = ",";
 
             StringBuilder stringBuilder = new StringBuilder();
-            double[][] output = ToJagged<double>(this.Result.Elements);
+            double[][] output = MatrixClientHelper.ToJagged<double>(this.Result.Elements);
 
             int length = output.GetLength(0);
             for (int index = 0; index < length; index++)
@@ -185,7 +181,7 @@ namespace MatrixClient
 
             if (saveFileDialogCSV.ShowDialog() == DialogResult.OK)
             {
-                if((stream = saveFileDialogCSV.OpenFile()) != null)
+                if ((stream = saveFileDialogCSV.OpenFile()) != null)
                 {
                     using (StreamWriter writer = new StreamWriter(stream))
                     {
@@ -309,16 +305,6 @@ namespace MatrixClient
             return false;
         }
 
-        private bool CheckMatrixSize(DataGridView dataGridView, int rows, int columns)
-        {
-            if (dataGridView.ColumnCount == columns && dataGridView.RowCount == rows)
-            {
-                return true;
-            }
-
-            return false;
-        }
-
         private void SetDefaultLabelState()
         {
             labelState.ForeColor = Color.Black;
@@ -343,77 +329,6 @@ namespace MatrixClient
             IsOperationApproved = false;
         }
 
-        private void SetColumnsAndRowsForDatagridView(DataGridView dataGridView, int rows, int columns)
-        {
-            dataGridView.Rows.Clear();
-            dataGridView.Columns.Clear();
-
-            dataGridView.ColumnCount = columns;
-
-            dataGridView.AllowUserToAddRows = false;
-
-            List<string> column = new List<string>();
-            for (int i = 0; i < columns; i++)
-            {
-                column.Add(0.0.ToString());
-            }
-
-            for (int i = 0; i < rows; i++)
-            {
-                dataGridView.Rows.Add(column.ToArray());
-            }
-        }
-
-        private void SetRandomValuesForGrid(params DataGridView[] dataGridViews)
-        {
-            Random random = new Random();
-
-            foreach (DataGridView dataGridView in dataGridViews)
-            {
-                for (int i = 0; i < dataGridView.RowCount; i++)
-                {
-                    for (int j = 0; j < dataGridView.ColumnCount; j++)
-                    {
-                        dataGridView[j, i].Value = random.Next(-100, 100).ToString();
-                    }
-                }
-            }
-        }
-
-        private bool VerifyMatrixParameters(params DataGridView[] dataGridViews)
-        {
-            foreach(DataGridView dataGridView in dataGridViews)
-            {
-                for (int i = 0; i < dataGridView.RowCount; i++)
-                {
-                    for (int j = 0; j < dataGridView.ColumnCount; j++)
-                    {
-                        if (!double.TryParse(dataGridView[j,i].Value.ToString(), out double result))
-                        {
-                            return false;
-                        }
-                    }
-                }
-            }
-
-            return true;
-        }
-
-        private double[,] GetArrayFromGrid(DataGridView dataGridView)
-        {
-            double[,] result = new double[dataGridView.RowCount, dataGridView.ColumnCount];
-
-            for (int i = 0; i < dataGridView.RowCount; i++)
-            {
-                for (int j = 0; j < dataGridView.ColumnCount; j++)
-                {
-                    result[i, j] = double.Parse(dataGridView[j, i].Value.ToString());
-                }
-            }
-
-            return result;
-        }
-
         private void SetResultGrid(MatrixT<double> result)
         {
             dataGridViewResult.Rows.Clear();
@@ -429,31 +344,13 @@ namespace MatrixClient
                 string[] row = new string[dataGridViewResult.ColumnCount];
                 for (int j = 0; j < dataGridViewResult.ColumnCount; j++)
                 {
-                    row[j] = result[i, j].ToString();                  
+                    row[j] = result[i, j].ToString();
                 }
 
                 dataGridViewResult.Rows.Add(row);
             }
 
             dataGridViewResult.ReadOnly = true;
-        }
-
-        private static T[][] ToJagged<T>(T[,] mArray)
-        {
-            var rows = mArray.GetLength(0);
-            var cols = mArray.GetLength(1);
-            var jArray = new T[rows][];
-
-            for (int i = 0; i < rows; i++)
-            {
-                jArray[i] = new T[cols];
-                for (int j = 0; j < cols; j++)
-                {
-                    jArray[i][j] = mArray[i, j];
-                }
-            }
-
-            return jArray;
         }
     }
 }
